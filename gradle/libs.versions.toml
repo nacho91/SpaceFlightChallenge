@@ -11,10 +11,11 @@ material = "1.12.0"
 compose = "2025.07.00"
 retrofit = "3.0.0"
 hilt = "2.56.2"
+hilt-navigation = "1.2.0"
 coil = "2.7.0"
 lifecycle = "2.9.2"
 activity = "1.10.1"
-
+navigation = "2.9.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,9 @@ compose-ui = { module = "androidx.compose.ui:ui" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling"}
 
+# Navigation
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+
 # Lifecycle + Activity
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
@@ -45,6 +49,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 #Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
