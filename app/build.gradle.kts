@@ -62,6 +62,9 @@ dependencies {
     implementation(libs.compose.material3)
     debugImplementation(libs.compose.ui.tooling)
 
+    // Navigation
+    implementation(libs.navigation.compose)
+
     // Lifecycle + Activity
     implementation(libs.activity.compose)
     implementation(libs.lifecycle.runtime.compose)
@@ -72,5 +75,6 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 }
