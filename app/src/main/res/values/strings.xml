@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SpaceFlightChallenge</string>
+
+    <string name="list_error">Something went wrong!</string>
+    <string name="list_no_results">No results!</string>
+    <string name="list_search_placeholder">Search</string>
 </resources>

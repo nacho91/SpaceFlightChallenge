@@ -5,5 +5,5 @@ import com.nacho.spaceflight.challenge.domain.repository.ArticleRepository
 class GetArticlesUseCase(
     private val repository: ArticleRepository
 ) {
-    suspend operator fun invoke() = repository.getArticles()
+    suspend operator fun invoke(query: String) = repository.getArticles(query)
 }
