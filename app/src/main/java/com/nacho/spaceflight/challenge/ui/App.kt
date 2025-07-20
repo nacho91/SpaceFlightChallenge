@@ -20,7 +20,7 @@ fun App() {
     MaterialTheme {
         val navController = rememberNavController()
 
-        Scaffold{ innerPadding ->
+        Scaffold { innerPadding ->
             NavHost(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
@@ -39,7 +39,7 @@ fun App() {
                     listOf(navArgument("articleId") { type = NavType.IntType })
                 ) {
                     val articleId = it.arguments?.getInt("articleId") ?: return@composable
-                    DetailScreen(articleId = articleId)
+                    DetailScreen(articleId = articleId, onBack = { navController.navigateUp() })
                 }
             }
         }

@@ -30,7 +30,7 @@ class ListViewModelTest {
     @Test
     fun `user sees articles when open the app`() = runTest {
         coEvery { getArticlesUseCase(any()) } returns listOf(
-            Article(1, "Test Article", "", authors = listOf())
+            Article(1, "Test Article", "", summary = "", authors = listOf())
         )
 
         val viewModel = ListViewModel(getArticlesUseCase)
