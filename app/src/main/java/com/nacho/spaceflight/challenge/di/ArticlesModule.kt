@@ -3,6 +3,7 @@ package com.nacho.spaceflight.challenge.di
 import com.nacho.spaceflight.challenge.data.remote.SpaceFlightApi
 import com.nacho.spaceflight.challenge.domain.repository.ArticleRepository
 import com.nacho.spaceflight.challenge.domain.repository.ArticleRepositoryImpl
+import com.nacho.spaceflight.challenge.domain.usecase.GetArticleByIdUseCase
 import com.nacho.spaceflight.challenge.domain.usecase.GetArticlesUseCase
 import dagger.Module
 import dagger.Provides
@@ -29,4 +30,9 @@ object ArticlesModule {
     @Singleton
     fun provideGetArticlesUseCase(repository: ArticleRepository): GetArticlesUseCase =
         GetArticlesUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetArticleByIdUseCase(repository: ArticleRepository): GetArticleByIdUseCase =
+        GetArticleByIdUseCase(repository)
 }

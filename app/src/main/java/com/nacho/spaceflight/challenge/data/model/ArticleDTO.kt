@@ -7,6 +7,7 @@ data class ArticleDTO(
     val id: Int,
     val title: String,
     @SerializedName("image_url") val imageUrl: String,
+    val summary: String,
     val authors: List<AuthorDTO>
 )
 
@@ -14,5 +15,6 @@ fun ArticleDTO.toDomain() = Article(
     id = id,
     title = title,
     imageUrl = imageUrl,
+    summary = summary,
     authors = authors.map { it.toDomain() }
 )
