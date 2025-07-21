@@ -85,6 +85,9 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
 
+    // Timber
+    implementation(libs.timber)
+
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)

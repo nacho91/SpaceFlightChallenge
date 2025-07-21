@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,10 +35,12 @@ class ListViewModel @Inject constructor(
     }
 
     private fun fetchArticles(query: String) {
+        Timber.i("Fetching articles, query $query")
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             when (val result = getArticlesUseCase(query)) {
                 is Result.Success -> {
+                    Timber.i("Fetched articles, query $query")
                     val articles = result.data
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,

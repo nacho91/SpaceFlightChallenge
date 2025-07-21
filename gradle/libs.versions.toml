@@ -20,6 +20,7 @@ coil = "2.7.0"
 lifecycle = "2.9.2"
 activity = "1.10.1"
 navigation = "2.9.2"
+timber = "5.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,9 @@ lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel
 
 # Coil
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+
+# Timber
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 #Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
