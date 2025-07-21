@@ -1,8 +1,10 @@
 package com.nacho.spaceflight.challenge.ui.detail
 
 import app.cash.turbine.test
+import com.nacho.spaceflight.challenge.R
 import com.nacho.spaceflight.challenge.domain.model.Article
 import com.nacho.spaceflight.challenge.domain.usecase.GetArticleByIdUseCase
+import com.nacho.spaceflight.challenge.domain.util.Result
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -11,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
@@ -34,7 +37,7 @@ class DetailViewModelTest {
     @Test
     fun `user opens article`() = runTest {
         coEvery { getArticleByIdUseCase(any()) } returns
-                Article(1, "Test Article", "", summary = "", authors = listOf())
+                Result.Success(Article(1, "Test Article", "", summary = "", authors = listOf()))
 
         viewModel.loadArticle(1)
 
@@ -49,8 +52,8 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun `user sees error when opens article`() = runTest {
-        coEvery { getArticleByIdUseCase(any()) } throws RuntimeException("Network error")
+    fun `user sees network error when opens article`() = runTest {
+        coEvery { getArticleByIdUseCase(any()) } returns Result.Error.Network(RuntimeException("Network error"))
 
         viewModel.loadArticle(1)
 
@@ -60,7 +63,24 @@ class DetailViewModelTest {
 
             val finalState = awaitItem()
             assertEquals(false, finalState.isLoading)
-            assertEquals(true, finalState.error)
+            assertEquals(R.string.error_network, finalState.errorMessage)
+            assertEquals(null, finalState.article)
+        }
+    }
+
+    @Test
+    fun `user sees unknown error when opens article`() = runTest {
+        coEvery { getArticleByIdUseCase(any()) } returns Result.Error.Unknown(RuntimeException("Unknown error"))
+
+        viewModel.loadArticle(1)
+
+        viewModel.uiState.test {
+            val loadingState = awaitItem()
+            assertEquals(true, loadingState.isLoading)
+
+            val finalState = awaitItem()
+            assertEquals(false, finalState.isLoading)
+            assertEquals(R.string.error_unknown, finalState.errorMessage)
             assertEquals(null, finalState.article)
         }
     }

@@ -28,11 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.nacho.spaceflight.challenge.R
-import com.nacho.spaceflight.challenge.R.string.list_error
 import com.nacho.spaceflight.challenge.R.string.list_no_results
 import com.nacho.spaceflight.challenge.R.string.list_search_placeholder
 import com.nacho.spaceflight.challenge.domain.model.Article
+import com.nacho.spaceflight.challenge.ui.components.Error
 
 @Composable
 fun ListScreen(
@@ -50,8 +49,12 @@ fun ListScreen(
             }
         }
 
-        state.error -> {
-            Text(stringResource(list_error), style = MaterialTheme.typography.headlineLarge)
+        state.errorMessage != null -> {
+            Error(
+                modifier = Modifier.fillMaxSize(),
+                message = stringResource(state.errorMessage!!),
+                onRetryClick = { viewModel.retry() }
+            )
         }
 
         else -> {
