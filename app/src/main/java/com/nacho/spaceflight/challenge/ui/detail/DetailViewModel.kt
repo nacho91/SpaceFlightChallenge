@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,9 +22,11 @@ class DetailViewModel @Inject constructor(
     val uiState: StateFlow<DetailUiState> = _uiState
 
     fun loadArticle(id: Int) {
+        Timber.i("Loading article $id")
         viewModelScope.launch {
             when (val result = getArticleByIdUseCase(id)) {
                 is Result.Success -> {
+                    Timber.i("Loaded article $id")
                     val article = result.data
                     _uiState.value =
                         DetailUiState(isLoading = false, article = article, errorMessage = null)
