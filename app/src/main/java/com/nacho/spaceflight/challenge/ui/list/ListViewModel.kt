@@ -2,8 +2,10 @@ package com.nacho.spaceflight.challenge.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nacho.spaceflight.challenge.R
 import com.nacho.spaceflight.challenge.domain.model.Article
 import com.nacho.spaceflight.challenge.domain.usecase.GetArticlesUseCase
+import com.nacho.spaceflight.challenge.domain.util.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,14 +35,32 @@ class ListViewModel @Inject constructor(
 
     private fun fetchArticles(query: String) {
         viewModelScope.launch {
-            try {
-                _uiState.value = _uiState.value.copy(isLoading = true)
-                val articles = getArticlesUseCase(query)
-                _uiState.value = _uiState.value.copy(isLoading = false, articles = articles)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isLoading = false, error = true)
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            when (val result = getArticlesUseCase(query)) {
+                is Result.Success -> {
+                    val articles = result.data
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        articles = articles,
+                        errorMessage = null
+                    )
+                }
+
+                is Result.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = when (result) {
+                            is Result.Error.Network -> R.string.error_network
+                            else -> R.string.error_unknown
+                        }
+                    )
+                }
             }
         }
+    }
+
+    fun retry() {
+        fetchArticles(searchQuery.value)
     }
 
     @OptIn(FlowPreview::class)
@@ -62,5 +82,5 @@ class ListViewModel @Inject constructor(
 data class ListUiState(
     val isLoading: Boolean = true,
     val articles: List<Article> = emptyList(),
-    val error: Boolean = false
+    val errorMessage: Int? = null
 )

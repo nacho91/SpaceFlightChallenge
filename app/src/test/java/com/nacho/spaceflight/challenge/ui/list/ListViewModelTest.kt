@@ -1,8 +1,10 @@
 package com.nacho.spaceflight.challenge.ui.list
 
 import app.cash.turbine.test
+import com.nacho.spaceflight.challenge.R
 import com.nacho.spaceflight.challenge.domain.model.Article
 import com.nacho.spaceflight.challenge.domain.usecase.GetArticlesUseCase
+import com.nacho.spaceflight.challenge.domain.util.Result
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -11,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
@@ -29,9 +32,9 @@ class ListViewModelTest {
 
     @Test
     fun `user sees articles when open the app`() = runTest {
-        coEvery { getArticlesUseCase(any()) } returns listOf(
+        coEvery { getArticlesUseCase(any()) } returns Result.Success(listOf(
             Article(1, "Test Article", "", summary = "", authors = listOf())
-        )
+        ))
 
         val viewModel = ListViewModel(getArticlesUseCase)
 
@@ -47,8 +50,8 @@ class ListViewModelTest {
     }
 
     @Test
-    fun `user sees error when opens the app`() = runTest {
-        coEvery { getArticlesUseCase(any()) } throws RuntimeException("Network error")
+    fun `user sees network error when opens the app`() = runTest {
+        coEvery { getArticlesUseCase(any()) } returns Result.Error.Network(RuntimeException("Network error"))
 
         val viewModel = ListViewModel(getArticlesUseCase)
 
@@ -58,13 +61,35 @@ class ListViewModelTest {
 
             val finalState = awaitItem()
             assertEquals(false, finalState.isLoading)
-            assertEquals(true, finalState.error)
+            assertEquals(R.string.error_network, finalState.errorMessage)
             assertEquals(0, finalState.articles.size)
         }
     }
 
     @Test
+    fun `user sees unknown error when opens the app`() = runTest {
+        coEvery { getArticlesUseCase(any()) } returns Result.Error.Unknown(RuntimeException("Unknown error"))
+
+        val viewModel = ListViewModel(getArticlesUseCase)
+
+        viewModel.uiState.test {
+            val loadingState = awaitItem()
+            assertEquals(true, loadingState.isLoading)
+
+            val finalState = awaitItem()
+            assertEquals(false, finalState.isLoading)
+            assertEquals(R.string.error_unknown, finalState.errorMessage)
+            assertEquals(0, finalState.articles.size)
+        }
+    }
+
+
+    @Test
     fun `user search article`() = runTest {
+        coEvery { getArticlesUseCase(any()) } returns Result.Success(listOf(
+            Article(1, "Test Search Article", "", summary = "", authors = listOf())
+        ))
+
         val viewModel = ListViewModel(getArticlesUseCase)
 
         viewModel.searchQuery.test {

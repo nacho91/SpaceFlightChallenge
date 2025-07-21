@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,8 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.nacho.spaceflight.challenge.R.string.list_error
 import com.nacho.spaceflight.challenge.domain.model.Article
+import com.nacho.spaceflight.challenge.ui.components.Error
 
 @Composable
 fun DetailScreen(
@@ -55,8 +53,12 @@ fun DetailScreen(
             }
         }
 
-        state.error -> {
-            Text(stringResource(list_error), style = MaterialTheme.typography.headlineLarge)
+        state.errorMessage != null -> {
+            Error(
+                modifier = Modifier.fillMaxSize(),
+                message = stringResource(state.errorMessage!!),
+                onRetryClick = { viewModel.loadArticle(articleId) }
+            )
         }
 
         state.article != null -> {
